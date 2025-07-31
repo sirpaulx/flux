@@ -35,6 +35,6 @@ jobs:
 
       - name: Run Renovate CLI
         env:
-          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_GITHUB_TOKEN }}
           LOG_LEVEL: debug
         run: renovate ${{ github.repository }}
