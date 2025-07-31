@@ -1,5 +1,6 @@
 {
   "extends": ["config:recommended"],
+  "recreateClosed": true,
   "enabledManagers": ["flux", "kubernetes", "helm-values"],
   "flux": {
     "postUpdateOptions": ["fluxReconcile"]
