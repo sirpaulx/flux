@@ -41,26 +41,10 @@ jobs:
       - name: Generate Flux Component Manifests (Split Files)
         run: |
           mkdir -p k8s/flux-systems
-
-          flux install \
-            --components=source-controller \
-            --dry-run=client \
-            --output=yaml > k8s/flux-systems/source-controller.yaml
-
-          flux install \
-            --components=kustomize-controller \
-            --dry-run=client \
-            --output=yaml > k8s/flux-systems/kustomize-controller.yaml
-
-          flux install \
-            --components=helm-controller \
-            --dry-run=client \
-            --output=yaml > k8s/flux-systems/helm-controller.yaml
-
-          flux install \
-            --components=notification-controller \
-            --dry-run=client \
-            --output=yaml > k8s/flux-systems/notification-controller.yaml
+          flux install --export --components=source-controller > k8s/flux-systems/source-controller.yaml
+          flux install --export --components=kustomize-controller > k8s/flux-systems/kustomize-controller.yaml
+          flux install --export --components=helm-controller > k8s/flux-systems/helm-controller.yaml
+          flux install --export --components=notification-controller > k8s/flux-systems/notification-controller.yaml
 
 
       - name: Run Renovate CLI
