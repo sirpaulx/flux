@@ -1,0 +1,53 @@
+{
+  "extends": ["config:recommended"],
+  "enabledManagers": ["flux", "kubernetes", "helm-values"],
+  "flux": {
+    "postUpdateOptions": ["fluxReconcile"]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["flux"],
+      "postUpdateOptions": ["fluxReconcile"],
+      "additionalBranchPrefix": "flux-"
+    },
+
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ],
+  "hostRules": [
+    {
+      "matchHost": "prometheus-community.github.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "charts.bitnami.com",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "helm.traefik.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "grafana.github.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "index.docker.io",
+      "hostType": "docker"
+    }
+  ]
+}
