@@ -30,6 +30,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Flux CLI
+        run: |
+          curl -s https://fluxcd.io/install.sh | sudo bash
+          flux --version  # Optional: confirm installation
+
       - name: Install Renovate CLI
         run: npm install -g renovate
 
