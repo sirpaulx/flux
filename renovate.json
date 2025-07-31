@@ -1,53 +1,146 @@
 {
-  "extends": ["config:recommended"],
-  "enabledManagers": ["flux", "kubernetes", "helm-values"],
-  "flux": {
-    "postUpdateOptions": ["fluxReconcile"]
-  },
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 3,
+  "rangeStrategy": "replace",
+  "commitMessagePrefix": "chore(deps): ",
+  "branchPrefix": "renovate/",
+  "branchConcurrentLimit": 5,
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Flux GitOps Toolkit components",
+      "fileMatch": [
+        "^k8s/flux-system/.*\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "image: ghcr\\.io/fluxcd/(?<depName>[^:]+):v?(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://ghcr.io",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Flux version comments",
+      "fileMatch": [
+        "^k8s/flux-system/.*\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# Flux Version: v(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+      ],
+      "depNameTemplate": "flux2",
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "fluxcd/flux2",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Update ECR container images",
+      "fileMatch": [
+        "^k8s/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "image: (?:\")?(?<depName>062495338241\\.dkr\\.ecr\\.eu-central-1\\.amazonaws\\.com/[^:]+):(?<currentValue>[^\"\\s]+)(?:\")?"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Update other Docker images",
+      "fileMatch": [
+        "^k8s/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "image: (?<depName>(?!062495338241\\.dkr\\.ecr)[^:]+):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
+  "hostRules": [
+    {
+      "matchHost": "ghcr.io",
+      "hostType": "docker"
+    },
+    {
+      "matchHost": "registry.k8s.io",
+      "hostType": "docker"
+    },
+    {
+      "matchHost": "quay.io",
+      "hostType": "docker"
+    },
+    {
+      "matchHost": "062495338241.dkr.ecr.eu-central-1.amazonaws.com",
+      "hostType": "docker"
+    }
+  ],
   "packageRules": [
     {
-      "matchManagers": ["flux"],
-      "postUpdateOptions": ["fluxReconcile"],
-      "additionalBranchPrefix": "flux-"
-    },
-
-    {
-      "matchDatasources": ["helm"],
-      "matchUpdateTypes": ["major"],
-      "automerge": false
-    },
-    {
-      "matchDatasources": ["docker"],
+      "description": "Flux system components - auto-merge minor and patch updates",
+      "matchDatasources": ["docker", "github-releases"],
+      "matchPackagePatterns": [
+        "^ghcr\\.io/fluxcd/",
+        "^fluxcd/"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "pr"
     },
     {
-      "matchDatasources": ["docker"],
+      "description": "Flux system components - manual review for major updates",
+      "matchDatasources": ["docker", "github-releases"],
+      "matchPackagePatterns": [
+        "^ghcr\\.io/fluxcd/",
+        "^fluxcd/"
+      ],
       "matchUpdateTypes": ["major"],
       "automerge": false
+    },
+    {
+      "description": "ECR images - manual review required",
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": [
+        "^062495338241\\.dkr\\.ecr\\.eu-central-1\\.amazonaws\\.com/"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Security-related packages - immediate attention",
+      "matchPackagePatterns": [
+        "twistlock",
+        "falco",
+        "security"
+      ],
+      "automerge": false,
+      "prPriority": 10
     }
   ],
-  "hostRules": [
-    {
-      "matchHost": "prometheus-community.github.io",
-      "hostType": "helm"
-    },
-    {
-      "matchHost": "charts.bitnami.com",
-      "hostType": "helm"
-    },
-    {
-      "matchHost": "helm.traefik.io",
-      "hostType": "helm"
-    },
-    {
-      "matchHost": "grafana.github.io",
-      "hostType": "helm"
-    },
-    {
-      "matchHost": "index.docker.io",
-      "hostType": "docker"
-    }
+  "labels": ["dependencies", "renovate"],
+  "timezone": "UTC",
+  "schedule": [
+    "at any time"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/.git/**"
   ]
 }
