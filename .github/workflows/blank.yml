@@ -1,8 +1,7 @@
 name: Renovate + Flux (Scheduler & Alerts)
-
 on:
   schedule:
-    - cron: "0 3 * * 1"  # Every Monday at 3AM UTC
+    - cron: "0 3 * * 1"  # Every Monday at 3AM UTC (fixed syntax)
   workflow_dispatch:     # Manual trigger
   pull_request:
     types: [opened, reopened, closed]
@@ -16,31 +15,50 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
+        with:
+          token: ${{ secrets.RENOVATE_GITHUB_TOKEN }}
+          
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
+          
       - name: Install Renovate CLI
         run: npm install -g renovate
-
+        
       - name: Install Flux CLI
         run: |
           curl -s https://fluxcd.io/install.sh | sudo bash
           flux --version
-
+          
       - name: Run Renovate
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_GITHUB_TOKEN }}
           LOG_LEVEL: info
         run: renovate ${{ github.repository }}
-
-      - name: Reconcile Flux
+        
+      - name: Reconcile Flux Sources
         if: success()   # Only reconcile if Renovate ran successfully
         run: |
-          flux reconcile source git flux-system --with-source
-
+          # Reconcile the git source first
+          flux reconcile source git flux-system
+          
+          # Wait a moment for the source to sync
+          sleep 10
+          
+          # Then reconcile all kustomizations that depend on this source
+          flux reconcile kustomization flux-system
+          
+          # Optional: reconcile other sources if you have them
+          # flux reconcile source helm <helm-repo-name>
+          
+      - name: Check Flux Status
+        if: success()
+        run: |
+          echo "Checking Flux component status..."
+          flux get sources git
+          flux get kustomizations
+          
   renovate-alerts:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'  # Only run alerts on PR events
@@ -48,7 +66,7 @@ jobs:
       - name: Send Slack Notification
         if: always()
         run: |
-          ACTION=${{ github.event.action }}
+          ACTION="${{ github.event.action }}"
           TITLE="${{ github.event.pull_request.title }}"
           URL="${{ github.event.pull_request.html_url }}"
           
@@ -64,7 +82,7 @@ jobs:
               STATUS="❌ Renovate PR closed without merge"
             fi
           fi
-
+          
           # Send message to Slack
           curl -X POST -H 'Content-type: application/json' \
           --data "{\"text\":\"$STATUS: *$TITLE* <$URL>\"}" \
