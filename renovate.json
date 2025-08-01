@@ -5,7 +5,7 @@
   "flux": {
     "postUpdateOptions": ["fluxReconcile"]
   },
-  "schedule": ["30 14 * * 1-5"],
+  "schedule": ["* 16 * * 1-5"],
   "timezone": "Africa/Lagos",
   "assignees": ["sirpaulx"],
   "packageRules": [
