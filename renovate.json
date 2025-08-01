@@ -3,46 +3,9 @@
   "extends": ["config:recommended"],
   "recreateClosed": true,
   "timezone": "UTC",
-  "platform": "github",
-  "includeForks": false,
-  "forkProcessing": "disabled",
 
   "enabledManagers": ["flux", "kubernetes", "helm-values", "dockerfile", "docker-compose"],
 
-  "flux": {
-    "enabled": true,
-    "postUpdateOptions": ["fluxReconcile"],
-    "managerFilePatterns": [
-      "/(?:^|/)gotk-components\\.ya?ml$/",
-      "/clusters/.+\\.ya?ml$/",
-      "/apps/.+\\.ya?ml$/", 
-      "/infrastructure/.+\\.ya?ml$/",
-      "/flux-system/.+\\.ya?ml$/",
-      "/base/.+\\.ya?ml$/",
-      "/overlays/.+\\.ya?ml$/",
-      "/kustomization\\.ya?ml$/",
-      "/\\.(ya?ml)$/"
-    ]
-  },
-
-  "kubernetes": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/k8s/.+\\.ya?ml$/",
-      "/kubernetes/.+\\.ya?ml$/", 
-      "/manifests/.+\\.ya?ml$/",
-      "/deploy/.+\\.ya?ml$/"
-    ]
-  },
-
-  "helm-values": {
-    "enabled": true,
-    "managerFilePatterns": [
-      "/charts/.+/values\\.ya?ml$/"
-    ]
-  },
-
-  
   "schedule": ["before 5am on monday", "before 5am on thursday"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 3,
@@ -50,104 +13,39 @@
   "semanticCommits": "enabled",
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
-  "commitMessagePrefix": "brown ",
+  "commitMessagePrefix": "",
   "gitAuthor": "Renovate Bot <renovate@company.com>",
 
   "packageRules": [
     {
-      "description": " Security updates - Immediate action required",
-      "matchDepTypes": ["security"],
-      "matchPackagePatterns": [".*"],
-      "schedule": ["at any time"],
-      "prPriority": 20,
-      "automerge": false,
-      "labels": ["security", "urgent", "notify-security-team"],
-      "reviewers": ["@security-team"],
-      "assignees": ["@platform-lead"],
-      "prTitle": " SECURITY: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": " security: ",
-      "additionalBranchPrefix": "security-"
-    },
-    
-    {
-      "description": "⚡ Flux core system updates",
+      "description": "Flux manifests",
       "matchManagers": ["flux"],
-      "matchDatasources": ["github-releases", "github-tags"],
-      "matchPackageNames": [
-        "fluxcd/flux2",
-        "fluxcd/helm-controller", 
-        "fluxcd/kustomize-controller",
-        "fluxcd/notification-controller",
-        "fluxcd/source-controller"
+      "fileMatch": [
+        "clusters/.*\\.ya?ml$",
+        "apps/.*\\.ya?ml$",
+        "infrastructure/.*\\.ya?ml$",
+        "flux-system/.*\\.ya?ml$",
+        "base/.*\\.ya?ml$",
+        "overlays/.*\\.ya?ml$"
       ],
-      "schedule": ["before 5am on monday"],
-      "postUpdateOptions": ["fluxReconcile"],
-      "additionalBranchPrefix": "flux-core-",
-      "prPriority": 15,
-      "automerge": false,
-      "labels": ["flux-core-update", "critical", "notify-platform-team"],
-      "reviewers": ["@platform-team"],
-      "prTitle": "⚡ Flux Core: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": "⚡ flux-core: "
+      "postUpdateOptions": ["fluxReconcile"]
     },
-    
     {
-      "description": "Regular Flux updates with reconciliation",
-      "matchManagers": ["flux"],
-      "excludePackageNames": [
-        "fluxcd/flux2",
-        "fluxcd/helm-controller", 
-        "fluxcd/kustomize-controller",
-        "fluxcd/notification-controller",
-        "fluxcd/source-controller"
-      ],
-      "postUpdateOptions": ["fluxReconcile"],
-      "additionalBranchPrefix": "flux-",
-      "labels": ["flux-update", "gitops", "notify-devops-team"],
-      "reviewers": ["@devops-team"],
-      "prTitle": "🔧 Flux: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": " flux: "
+      "description": "Kubernetes manifests",
+      "matchManagers": ["kubernetes"],
+      "fileMatch": [
+        "k8s/.*\\.ya?ml$",
+        "kubernetes/.*\\.ya?ml$",
+        "manifests/.*\\.ya?ml$",
+        "deploy/.*\\.ya?ml$"
+      ]
     },
-    
     {
-      "description": " Critical Helm charts - Manual review required",
-      "matchDatasources": ["helm"],
-      "matchPackageNames": [
-        "cert-manager",
-        "ingress-nginx",
-        "prometheus", 
-        "grafana",
-        "vault",
-        "istio-base",
-        "istiod",
-        "external-dns"
-      ],
-      "automerge": false,
-      "labels": ["critical-helm-update", "manual-review", "notify-platform-team"],
-      "reviewers": ["@platform-team", "@senior-devs"],
-      "prPriority": 10,
-      "prTitle": " Critical Helm: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": " helm-critical: "
-    },
-
-    {
-      "description": " Helm minor/patch auto-merge for staging",
-      "matchDatasources": ["helm"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchPaths": ["clusters/staging/**", "clusters/dev/**"],
-      "excludePackageNames": [
-        "cert-manager", "ingress-nginx", "prometheus", 
-        "grafana", "vault", "istio-base", "istiod"
-      ],
-      "schedule": ["before 5am on monday"],
-      "groupName": "helm-staging-auto",
-      "groupSlug": "helm-staging",
-      "automerge": true,
-      "automergeType": "pr",
-      "platformAutomerge": true,
-      "labels": ["helm-auto-update", "staging", "auto-merged"],
-      "prTitle": " Helm Auto: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": " helm-auto: "
+      "description": "Helm values",
+      "matchManagers": ["helm-values"],
+      "fileMatch": [
+        "charts/.+/values\\.ya?ml$"
+      ]
     }
   ],
 
@@ -172,31 +70,11 @@
   "osvVulnerabilityAlerts": true,
 
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": " Monthly Dependency Dashboard - Flux GitOps",
-  "dependencyDashboardHeader": "## Monthly Dependency Scan Results\n\n**Last Scan:** {{date}}\n**Next Scheduled Scan:** First Monday of next month\n\n### 📈 Update Categories\n- 🚨 **Security**: Immediate action required\n- 🔴 **Major**: Breaking changes possible - Manual review\n- 🔶 **Production**: Requires production team approval\n- 🟢 **Auto-merge**: Safe updates for staging/dev\n\n### 🎯 Action Items\n- Review all items marked with ⚠️\n- Security updates have highest priority\n- Production updates scheduled for business hours\n\n---",
-  "dependencyDashboardFooter": "---\n\n###  Monthly Statistics\n- **Total Updates Available:** {{totalUpdates}}\n- **Auto-merged:** {{autoMerged}}\n- **Pending Review:** {{pendingReview}}\n- **Security Alerts:** {{securityAlerts}}\n\n💡 **Tip:** Enable notifications in Slack/Teams for real-time updates\n\n🔗 **Resources:**\n- [Renovate Dashboard]({{dashboardUrl}})\n- [Security Policy](https://company.com/security-policy)\n- [Deployment Runbook](https://company.com/deployment-guide)",
+  "dependencyDashboardTitle": "Monthly Dependency Dashboard - Flux GitOps",
 
-  "assignees": ["@platform-lead"],
-  "reviewers": ["@devops-team"],
-  "labels": ["dependencies", "automated-update"],
-
-  "separateMinorPatch": false,
-  "separateMajorMinor": true,
-  "separateMultipleMajor": true,
-  "minimumReleaseAge": "3 days",
-  "stabilityDays": 3,
-  "respectLatest": true,
-  "rangeStrategy": "bump",
-
-  "logLevel": "info",
-  "onboarding": false,
-  "requireConfig": "required",
-  "persistRepoData": true,
-
-  
   "postUpgradeTasks": {
     "commands": [
-      "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\" Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
+      "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
     ]
   }
 }
