@@ -42,7 +42,7 @@
     ]
   },
 
-  // 📅 Schedule aligned: Dev/Staging early week, Prod mid-week
+  //  Schedule aligned: Dev/Staging early week, Prod mid-week
   "schedule": ["before 5am on monday", "before 5am on thursday"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 3,
@@ -50,22 +50,22 @@
   "semanticCommits": "enabled",
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
-  "commitMessagePrefix": "📦 ",
+  "commitMessagePrefix": "brown ",
   "gitAuthor": "Renovate Bot <renovate@company.com>",
 
   "packageRules": [
     {
-      "description": "🚨 Security updates - Immediate action required",
+      "description": " Security updates - Immediate action required",
       "matchDepTypes": ["security"],
       "matchPackagePatterns": [".*"],
       "schedule": ["at any time"],
       "prPriority": 20,
       "automerge": false,
-      "labels": ["🚨security", "urgent", "notify-security-team"],
+      "labels": ["security", "urgent", "notify-security-team"],
       "reviewers": ["@security-team"],
       "assignees": ["@platform-lead"],
-      "prTitle": "🚨 SECURITY: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": "🚨 security: ",
+      "prTitle": " SECURITY: Update {{depName}} to {{newVersion}}",
+      "commitMessagePrefix": " security: ",
       "additionalBranchPrefix": "security-"
     },
     
@@ -92,7 +92,7 @@
     },
     
     {
-      "description": "🔧 Regular Flux updates with reconciliation",
+      "description": "Regular Flux updates with reconciliation",
       "matchManagers": ["flux"],
       "excludePackageNames": [
         "fluxcd/flux2",
@@ -106,11 +106,11 @@
       "labels": ["flux-update", "gitops", "notify-devops-team"],
       "reviewers": ["@devops-team"],
       "prTitle": "🔧 Flux: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": "🔧 flux: "
+      "commitMessagePrefix": " flux: "
     },
     
     {
-      "description": "🛡️ Critical Helm charts - Manual review required",
+      "description": " Critical Helm charts - Manual review required",
       "matchDatasources": ["helm"],
       "matchPackageNames": [
         "cert-manager",
@@ -126,12 +126,12 @@
       "labels": ["critical-helm-update", "manual-review", "notify-platform-team"],
       "reviewers": ["@platform-team", "@senior-devs"],
       "prPriority": 10,
-      "prTitle": "🛡️ Critical Helm: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": "🛡️ helm-critical: "
+      "prTitle": " Critical Helm: Update {{depName}} to {{newVersion}}",
+      "commitMessagePrefix": " helm-critical: "
     },
 
     {
-      "description": "🟢 Helm minor/patch auto-merge for staging",
+      "description": " Helm minor/patch auto-merge for staging",
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["minor", "patch"],
       "matchPaths": ["clusters/staging/**", "clusters/dev/**"],
@@ -146,8 +146,8 @@
       "automergeType": "pr",
       "platformAutomerge": true,
       "labels": ["helm-auto-update", "staging", "auto-merged"],
-      "prTitle": "🟢 Helm Auto: Update {{depName}} to {{newVersion}}",
-      "commitMessagePrefix": "🟢 helm-auto: "
+      "prTitle": " Helm Auto: Update {{depName}} to {{newVersion}}",
+      "commitMessagePrefix": " helm-auto: "
     }
   ],
 
@@ -172,9 +172,9 @@
   "osvVulnerabilityAlerts": true,
 
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": "📊 Monthly Dependency Dashboard - Flux GitOps",
-  "dependencyDashboardHeader": "## 🗓️ Monthly Dependency Scan Results\n\n**Last Scan:** {{date}}\n**Next Scheduled Scan:** First Monday of next month\n\n### 📈 Update Categories\n- 🚨 **Security**: Immediate action required\n- 🔴 **Major**: Breaking changes possible - Manual review\n- 🔶 **Production**: Requires production team approval\n- 🟢 **Auto-merge**: Safe updates for staging/dev\n\n### 🎯 Action Items\n- Review all items marked with ⚠️\n- Security updates have highest priority\n- Production updates scheduled for business hours\n\n---",
-  "dependencyDashboardFooter": "---\n\n### 📋 Monthly Statistics\n- **Total Updates Available:** {{totalUpdates}}\n- **Auto-merged:** {{autoMerged}}\n- **Pending Review:** {{pendingReview}}\n- **Security Alerts:** {{securityAlerts}}\n\n💡 **Tip:** Enable notifications in Slack/Teams for real-time updates\n\n🔗 **Resources:**\n- [Renovate Dashboard]({{dashboardUrl}})\n- [Security Policy](https://company.com/security-policy)\n- [Deployment Runbook](https://company.com/deployment-guide)",
+  "dependencyDashboardTitle": " Monthly Dependency Dashboard - Flux GitOps",
+  "dependencyDashboardHeader": "## Monthly Dependency Scan Results\n\n**Last Scan:** {{date}}\n**Next Scheduled Scan:** First Monday of next month\n\n### 📈 Update Categories\n- 🚨 **Security**: Immediate action required\n- 🔴 **Major**: Breaking changes possible - Manual review\n- 🔶 **Production**: Requires production team approval\n- 🟢 **Auto-merge**: Safe updates for staging/dev\n\n### 🎯 Action Items\n- Review all items marked with ⚠️\n- Security updates have highest priority\n- Production updates scheduled for business hours\n\n---",
+  "dependencyDashboardFooter": "---\n\n###  Monthly Statistics\n- **Total Updates Available:** {{totalUpdates}}\n- **Auto-merged:** {{autoMerged}}\n- **Pending Review:** {{pendingReview}}\n- **Security Alerts:** {{securityAlerts}}\n\n💡 **Tip:** Enable notifications in Slack/Teams for real-time updates\n\n🔗 **Resources:**\n- [Renovate Dashboard]({{dashboardUrl}})\n- [Security Policy](https://company.com/security-policy)\n- [Deployment Runbook](https://company.com/deployment-guide)",
 
   "assignees": ["@platform-lead"],
   "reviewers": ["@devops-team"],
@@ -193,10 +193,10 @@
   "requireConfig": "required",
   "persistRepoData": true,
 
-  // 🔔 Slack notification example
+  // Slack notification example
   "postUpgradeTasks": {
     "commands": [
-      "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"📢 Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
+      "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\" Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
     ]
   }
 }
