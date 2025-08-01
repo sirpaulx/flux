@@ -5,8 +5,9 @@
   "flux": {
     "postUpdateOptions": ["fluxReconcile"]
   },
-  "schedule": ["* 12 * * 1-5"],
+  "schedule": ["30 14 * * 1-5"],
   "timezone": "Africa/Lagos",
+  "assignees": ["sirpaulx"],
   "packageRules": [
     {
       "matchManagers": ["flux"],
