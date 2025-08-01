@@ -1,6 +1,6 @@
 {
   "extends": ["config:recommended"],
-  "recreateClosed": true,
+  "recreateWhen": "always",
   "enabledManagers": ["flux", "kubernetes", "helm-values"],
   "flux": {
     "postUpdateOptions": ["fluxReconcile"]
@@ -53,17 +53,5 @@
     }
   ],
   "prHourlyLimit": 2,
-  "prConcurrentLimit": 5,
-  "onboardingConfig": {
-    "extends": ["config:recommended"],
-    "onboarding": true
-  },
-  "notifications": [
-    {
-      "type": "email",
-      "enabled": true,
-      "addresses": ["sirpaulx@gmail.com"],
-      "notifyOn": ["pr", "error", "warning"]
-    }
-  ]
+  "prConcurrentLimit": 5
 }
