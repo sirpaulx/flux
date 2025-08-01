@@ -42,7 +42,7 @@
     ]
   },
 
-  //  Schedule aligned: Dev/Staging early week, Prod mid-week
+  
   "schedule": ["before 5am on monday", "before 5am on thursday"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 3,
