@@ -6,6 +6,36 @@
 
   "enabledManagers": ["flux", "kubernetes", "helm-values", "dockerfile", "docker-compose"],
 
+  "flux": {
+    "enabled": true,
+    "postUpdateOptions": ["fluxReconcile"],
+    "fileMatch": [
+      "clusters/.*\\.ya?ml$",
+      "apps/.*\\.ya?ml$",
+      "infrastructure/.*\\.ya?ml$",
+      "flux-system/.*\\.ya?ml$",
+      "base/.*\\.ya?ml$",
+      "overlays/.*\\.ya?ml$"
+    ]
+  },
+
+  "kubernetes": {
+    "enabled": true,
+    "fileMatch": [
+      "k8s/.*\\.ya?ml$",
+      "kubernetes/.*\\.ya?ml$",
+      "manifests/.*\\.ya?ml$",
+      "deploy/.*\\.ya?ml$"
+    ]
+  },
+
+  "helm-values": {
+    "enabled": true,
+    "fileMatch": [
+      "charts/.+/values\\.ya?ml$"
+    ]
+  },
+
   "schedule": ["before 5am on monday", "before 5am on thursday"],
   "prConcurrentLimit": 5,
   "prHourlyLimit": 3,
@@ -15,51 +45,6 @@
   "semanticCommitScope": "deps",
   "commitMessagePrefix": "",
   "gitAuthor": "Renovate Bot <renovate@company.com>",
-
-  "packageRules": [
-    {
-      "description": "Flux manifests",
-      "matchManagers": ["flux"],
-      "fileMatch": [
-        "clusters/.*\\.ya?ml$",
-        "apps/.*\\.ya?ml$",
-        "infrastructure/.*\\.ya?ml$",
-        "flux-system/.*\\.ya?ml$",
-        "base/.*\\.ya?ml$",
-        "overlays/.*\\.ya?ml$"
-      ],
-      "postUpdateOptions": ["fluxReconcile"]
-    },
-    {
-      "description": "Kubernetes manifests",
-      "matchManagers": ["kubernetes"],
-      "fileMatch": [
-        "k8s/.*\\.ya?ml$",
-        "kubernetes/.*\\.ya?ml$",
-        "manifests/.*\\.ya?ml$",
-        "deploy/.*\\.ya?ml$"
-      ]
-    },
-    {
-      "description": "Helm values",
-      "matchManagers": ["helm-values"],
-      "fileMatch": [
-        "charts/.+/values\\.ya?ml$"
-      ]
-    }
-  ],
-
-  "hostRules": [
-    { "matchHost": "prometheus-community.github.io", "hostType": "helm", "timeout": 60000 },
-    { "matchHost": "charts.bitnami.com", "hostType": "helm", "timeout": 60000 },
-    { "matchHost": "helm.traefik.io", "hostType": "helm", "timeout": 30000 },
-    { "matchHost": "grafana.github.io", "hostType": "helm", "timeout": 60000 },
-    { "matchHost": "index.docker.io", "hostType": "docker", "timeout": 120000 },
-    { "matchHost": "registry-1.docker.io", "hostType": "docker", "timeout": 120000 },
-    { "matchHost": "quay.io", "hostType": "docker", "timeout": 90000 },
-    { "matchHost": "gcr.io", "hostType": "docker", "timeout": 90000 },
-    { "matchHost": "ghcr.io", "hostType": "docker", "timeout": 90000 }
-  ],
 
   "vulnerabilityAlerts": {
     "enabled": true,
