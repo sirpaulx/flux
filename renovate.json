@@ -5,13 +5,14 @@
   "flux": {
     "postUpdateOptions": ["fluxReconcile"]
   },
+  "schedule": ["at 12:00pm every weekday"],
+  "timezone": "Africa/Lagos",
   "packageRules": [
     {
       "matchManagers": ["flux"],
       "postUpdateOptions": ["fluxReconcile"],
       "additionalBranchPrefix": "flux-"
     },
-
     {
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["major"],
@@ -49,6 +50,20 @@
     {
       "matchHost": "index.docker.io",
       "hostType": "docker"
+    }
+  ],
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  "onboardingConfig": {
+    "extends": ["config:recommended"],
+    "onboarding": true
+  },
+  "notifications": [
+    {
+      "type": "email",
+      "enabled": true,
+      "addresses": ["sirpaulx@gmail.com"],
+      "notifyOn": ["pr", "error", "warning"]
     }
   ]
 }
