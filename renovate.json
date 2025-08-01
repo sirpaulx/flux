@@ -193,7 +193,7 @@
   "requireConfig": "required",
   "persistRepoData": true,
 
-  // Slack notification example
+  
   "postUpgradeTasks": {
     "commands": [
       "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\" Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
