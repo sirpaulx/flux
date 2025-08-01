@@ -1,65 +1,54 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "recreateClosed": true,
-  "timezone": "UTC",
-
-  "enabledManagers": ["flux", "kubernetes", "helm-values", "dockerfile", "docker-compose"],
-
+  "enabledManagers": ["flux", "kubernetes", "helm-values"],
   "flux": {
-    "enabled": true,
-    "postUpdateOptions": ["fluxReconcile"],
-    "fileMatch": [
-      "clusters/.*\\.ya?ml$",
-      "apps/.*\\.ya?ml$",
-      "infrastructure/.*\\.ya?ml$",
-      "flux-system/.*\\.ya?ml$",
-      "base/.*\\.ya?ml$",
-      "overlays/.*\\.ya?ml$"
-    ]
+    "postUpdateOptions": ["fluxReconcile"]
   },
+  "packageRules": [
+    {
+      "matchManagers": ["flux"],
+      "postUpdateOptions": ["fluxReconcile"],
+      "additionalBranchPrefix": "flux-"
+    },
 
-  "kubernetes": {
-    "enabled": true,
-    "fileMatch": [
-      "k8s/.*\\.ya?ml$",
-      "kubernetes/.*\\.ya?ml$",
-      "manifests/.*\\.ya?ml$",
-      "deploy/.*\\.ya?ml$"
-    ]
-  },
-
-  "helm-values": {
-    "enabled": true,
-    "fileMatch": [
-      "charts/.+/values\\.ya?ml$"
-    ]
-  },
-
-  "schedule": ["before 5am on monday", "before 5am on thursday"],
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 3,
-  "branchPrefix": "renovate/",
-  "semanticCommits": "enabled",
-  "semanticCommitType": "chore",
-  "semanticCommitScope": "deps",
-  "commitMessagePrefix": "",
-  "gitAuthor": "Renovate Bot <renovate@company.com>",
-
-  "vulnerabilityAlerts": {
-    "enabled": true,
-    "labels": ["security", "vulnerability", "urgent"],
-    "reviewers": ["@security-team"],
-    "schedule": ["at any time"]
-  },
-  "osvVulnerabilityAlerts": true,
-
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Monthly Dependency Dashboard - Flux GitOps",
-
-  "postUpgradeTasks": {
-    "commands": [
-      "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Renovate scan complete for {{repositoryName}}\"}' $SLACK_WEBHOOK_URL"
-    ]
-  }
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ],
+  "hostRules": [
+    {
+      "matchHost": "prometheus-community.github.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "charts.bitnami.com",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "helm.traefik.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "grafana.github.io",
+      "hostType": "helm"
+    },
+    {
+      "matchHost": "index.docker.io",
+      "hostType": "docker"
+    }
+  ]
 }
